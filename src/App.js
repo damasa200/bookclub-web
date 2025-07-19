@@ -1,11 +1,16 @@
 import React from 'react';
 import {ChakraProvider} from '@chakra-ui/react'; 
 import {theme} from './styles/theme'; 
-import {LoginScreen} from './modules/unauthenticated/screens';
+import { RouterProvider } from 'react-router-dom';
+import { router } from 'router';
+
+
+
+
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <LoginScreen/>
+      <RouterProvider router={router}/>      
     </ChakraProvider>
   );
 }

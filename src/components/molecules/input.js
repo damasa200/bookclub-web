@@ -12,28 +12,40 @@ Input.Password = (props)=> {
    const handleClick = () => setShow (!show)
    return (
 
+    <InputGroup 
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      h="56px"
+      size="md"
+      {...props}
+      >    
 
-      <InputGroup h="56px" size ='md'>
-         <Input
+       <Input
+        focusBorderColor="brand.primary"
+        pr="4.5rem"
+        fontSize="16px"
+        type={show ? 'text' : 'password'}
+        placeholder={'placeholder'} 
+        {...props}
+      />
 
-         focusBorderColor="brand.primary"
-         pr="4.5rem"
-         
-         type={show ? ' text' : 'password'}
-         placeholder="Digite sua Senha"   
-          /> 
+      <InputRightElement h="100%">
+       <Button
+        bg="transparent"
+        _hover={{ bg: 'transparent' }}
+        size="sm"
+        onClick={handleClick}
+        h="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+       >
 
 
-          <InputRightElement width= "4.5rem"> 
-            <Button 
-
-            bg='transparent'_hover=
-            {{bg:'transparent'}} h="1.95rem size="
-            sm onClick={handleClick}>
-
-              {show ? (<ViewOffIcon boxSize={"24px"} 
-              color="black" />) : (<ViewIcon boxSize=
-              {"24px"} color="black"/>) }
+       {show ? (<ViewOffIcon boxSize={"18px"} 
+       color="black" />) : (<ViewIcon boxSize=
+       {"18px"} color="black"/>) }
 
            </Button>      
          </InputRightElement> 

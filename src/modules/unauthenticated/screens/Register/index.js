@@ -4,8 +4,8 @@ import { Input} from '../../../../components/molecules'
 import { useNavigate } from "react-router-dom";
 
 
-export const LoginScreen = () => {
-  const navigate = useNavigate ();
+export const RegisterScreen = () => {
+   const navigate = useNavigate ();
   return (
     <Flex flexDir= "row" w="100vw" h="100vh">
       <Flex 
@@ -16,30 +16,24 @@ export const LoginScreen = () => {
       flexDir="column" 
       w={["100%","100%",'100%',"50%"]}
       h="100%"
-      px={["24px", "48px", "100px", "96px"]} // padding horizontal
+      px={["24px", "48px", "100px", "96px"]} 
       >   
 
       <Flex flexDir="column" w={['100%', '100%','100%', '416px']}>
         <Image src="/img/bookclub.png" alt="BookClub logo" w="172px" h="40px"></Image>
-        <Text.ScreenTitle mt="48px">Login</Text.ScreenTitle>
-        <Input mt="24px" placeholder="email@exemplo.com"  />
-        <Input.Password mt="16px" placeholder=" Digite a senha"/>
-         
-      <Flex
-        mt="8px"
-        w="100%"
-        align="flex-end"
-        justify="flex-end"
-        >
-        <Link>Esqueceu sua senha?</Link>
-      </Flex>           
+        <Text.ScreenTitle mt="48px">Cadastro</Text.ScreenTitle>
+        <Input mt="24px" placeholder="Nome completo" />
+        <Input mt="16px" placeholder="E-mail" />
+        <Input.Password mt="16px" placeholder="Digite sua senha" />
+        <Input.Password mt="16px" placeholder="Confirme sua senha"/>
+   
 
-        <Button mt="24px">Login</Button>
-        <Link.Action  
-        onClick={() => navigate('/cadastrar')}
-        
-        mt="48px" text= "Não possui uma conta?" 
-        actionText=  "Cadastre-se aqui"/>
+
+
+
+        <Button mt="24px" >Cadastrar</Button>
+        <Link.Action onClick={() => navigate('/login')} mt="48px" text= 
+        "Já possui uma conta?" actionText= "Faça Login"/>
       </Flex>    
          
       </Flex>
