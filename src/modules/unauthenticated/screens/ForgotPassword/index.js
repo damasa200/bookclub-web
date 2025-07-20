@@ -1,11 +1,11 @@
 import { Flex,Image,} from "@chakra-ui/react"
-import{Text,Link,Button } from '../../../../components/atoms'
+import{Text,Button } from '../../../../components/atoms'
 import { Input} from '../../../../components/molecules'
 import { useNavigate } from "react-router-dom";
 
 
-export const RegisterScreen = () => {
-   const navigate = useNavigate ();
+export const ForgotPasswordScreen = () => {
+  const navigate = useNavigate ();
   return (
     <Flex flexDir= "row" w="100vw" h="100vh">
       <Flex 
@@ -16,24 +16,35 @@ export const RegisterScreen = () => {
       flexDir="column" 
       w={["100%","100%",'100%',"50%"]}
       h="100%"
-      px={["24px", "48px", "100px", "96px"]} 
+      px={["24px", "48px", "100px", "96px"]} // padding horizontal
       >   
 
-      <Flex flexDir="column" w={['100%', '100%','100%', '416px']}>
-        <Image src="/img/bookclub.png" alt="BookClub logo" w="172px" h="40px"></Image>
-        <Text.ScreenTitle mt="48px">Cadastro</Text.ScreenTitle>
-        <Input mt="24px" placeholder="Nome completo" />
-        <Input mt="16px" placeholder="E-mail" />
-        <Input.Password mt="16px" placeholder="Digite sua senha" />
-        <Input.Password mt="16px" placeholder="Confirme sua senha"/>
-   
+      <Flex 
+      
+      flexDir="column" 
+      w={['100%', '100%','100%', '416px']}>
 
+        <Image 
+        src="/img/bookclub.png" 
+        alt="BookClub logo" 
+        w="172px" h="40px"></Image>
 
+        <Text.ScreenTitle 
+        mt="48px">Esqueceu senha
+        </Text.ScreenTitle>
 
+        <Text>
+         Informe seu e-mail para enviarmo
+          um código de recuperação:
+       </Text>
 
-        <Button mb="12px" mt="24px" >Cadastrar</Button>
-        <Link.Action onClick={() => navigate('/')} mt="8px" text= 
-        "Já possui uma conta?" actionText= "Faça Login"/>
+        <Input 
+        mt="24px" 
+        placeholder="email@exemplo.com"  />                      
+
+        <Button onClick ={()=> navigate ('/reset-password')}
+        mt="24px">Avançar</Button>      
+        
       </Flex>    
          
       </Flex>
