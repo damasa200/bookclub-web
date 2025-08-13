@@ -1,12 +1,45 @@
-import { Flex,Image,} from "@chakra-ui/react"
+import { Flex,Image,useToast} from "@chakra-ui/react"
 import{Text,Link,Button } from '../../../../components/atoms'
 import { Input} from '../../../../components/molecules'
 import { useNavigate } from "react-router-dom";
 import {useFormik} from 'formik';
 import * as yup from 'yup';
+import { useMutation } from "@tanstack/react-query";
+import { loginCall } from "services/requests";
+import {saveItem} from "services/storage";
+
 
 export const LoginScreen = () => {
   const navigate = useNavigate()
+  const toast = useToast()
+
+    const mutation = useMutation({
+      mutationFn: loginCall,
+      onError: (error) => {
+          toast({
+            title: 'Falha ao realizar Login.',
+            description: error?.response?.data?.erro || 'Por favor, tente novamente.',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+      })
+     
+     },
+      onSuccess: (data) => {
+      toast({
+            title: 'Login realizado com sucesso.',          
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+      })
+      saveItem ('@bookclub_token',data?.data?.token)
+      navigate('/home')
+    }
+  });
+
+
+
+
 
   const { handleSubmit, values, handleChange, errors} = useFormik({
     initialValues: {
@@ -25,7 +58,7 @@ export const LoginScreen = () => {
     }),
 
     onSubmit:(data) => {
-      console.log({ data })
+      mutation.mutate(data)
     }
   })
   
@@ -81,7 +114,8 @@ export const LoginScreen = () => {
         <Link onClick={() => navigate('/forgot-password')}>Esqueceu sua senha?</Link>
       </Flex>           
 
-        <Button onClick={handleSubmit} mb="12px" mt="24px">Login</Button>
+        <Button isloading ={mutation.isloading} 
+        onClick={handleSubmit} mb="12px" mt="24px">Login</Button>
         <Link.Action  
         onClick={() => navigate('/cadastrar')}
         

@@ -1,13 +1,41 @@
-import { Flex,Image,} from "@chakra-ui/react"
+import { Flex,Image,useToast} from "@chakra-ui/react"
 import{Text,Button,Link } from '../../../../components/atoms'
 import { Input} from '../../../../components/molecules' 
 import {useFormik} from 'formik';
 import * as yup from 'yup'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { resetPasswordCall} from "services/requests";
 
 
 export const ResetPasswordScreen = () => {
-const Navigate = useNavigate ();
+const navigate = useNavigate ();
+const toast = useToast()
+const [searchParams] = useSearchParams();
+   
+       const mutation = useMutation({
+         mutationFn: resetPasswordCall,
+         onError: (error) => {
+             toast({
+               title: 'Falha ao solicitar nova senha.',
+               description: error?.response?.data?.erro || 'Por favor, tente novamente.',
+               status: 'error',
+               duration: 5000,
+               isClosable: true,
+         })
+        
+        },
+         onSuccess: () => {
+         toast({
+               title: 'Senha salva com sucesso.',          
+               status: 'success',
+               duration: 5000,
+               isClosable: true,
+         })
+         navigate('/')
+       }
+     });
+   
 
  const { handleSubmit, values, handleChange, errors} = useFormik({
        initialValues: {
@@ -18,7 +46,7 @@ const Navigate = useNavigate ();
    
       validationSchema: yup.object({
         token: yup.string()
-          .length(4, 'Token deve conter 4 caracteres.')
+          .length(6, 'Token deve conter 6 caracteres.')
           .required('Token é obrigatório.'),          
 
         password: yup.string()
@@ -34,7 +62,12 @@ const Navigate = useNavigate ();
        }),
    
        onSubmit:(data) => {        
-         Navigate('/')
+         mutation.mutate ({
+          email: searchParams.get('email'),
+          token: data.token,
+          password: data.password
+
+         })
        }
      })
 
@@ -66,8 +99,8 @@ const Navigate = useNavigate ();
         onChange={handleChange}
         error={errors.token}
         mt="24px" 
-        placeholder="Código 00000"
-        maxLength={4}
+        placeholder="Código 000000"
+        maxLength={6}
         />
         
 
@@ -88,7 +121,7 @@ const Navigate = useNavigate ();
         onChange={handleChange}
         error={errors.confirmPassword}
         mt="24px" placeholder="Confirma nova senha"/>             
-        <Button mb= "12px" mt="24px"onClick={handleSubmit}>Salvar</Button>  
+        <Button isloading={mutation.isloading} mb= "12px" mt="24px"onClick={handleSubmit}>Salvar</Button>  
         
          <Link.Action
            mt={['6px','48px']} text= "Não recebeu o código?" 

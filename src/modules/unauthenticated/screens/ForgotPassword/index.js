@@ -1,13 +1,40 @@
-import { Flex,Image,} from "@chakra-ui/react"
+import { Flex,Image,useToast} from "@chakra-ui/react"
 import{Text,Button } from '../../../../components/atoms'
 import { Input} from '../../../../components/molecules'
 import { useNavigate } from "react-router-dom";
 import {useFormik} from 'formik';
 import * as yup from 'yup';
+import { useMutation } from "@tanstack/react-query";
+import { forgotPasswordCall} from "services/requests";
 
 
 export const ForgotPasswordScreen = () => {
   const navigate = useNavigate ();
+
+  const toast = useToast()
+  
+      const mutation = useMutation({
+        mutationFn: forgotPasswordCall,
+        onError: (error) => {
+            toast({
+              title: 'Falha ao solicitar nova senha.',
+              description: error?.response?.data?.erro || 'Por favor, tente novamente.',
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+        })
+       
+       },
+        onSuccess: (data) => {
+        toast({
+              title: 'E-mail enviado com sucesso.',          
+              status: 'success',
+              duration: 5000,
+              isClosable: true,
+        })
+        navigate(`/reset-password?email=${values.email}`)
+      }
+    });
 
   const { handleSubmit, values, handleChange, errors} = useFormik({
       initialValues: {
@@ -24,13 +51,10 @@ export const ForgotPasswordScreen = () => {
       }),
   
       onSubmit:(data) => {
-        navigate ('/reset-password')
+        mutation.mutate(data)
       }
     })
     
-
-
-
 
   return (
     <Flex flexDir= "row" w="100vw" h="100vh">
@@ -74,7 +98,8 @@ export const ForgotPasswordScreen = () => {
           mt="24px" 
           placeholder="email@exemplo.com"  />                      
 
-       <Button onClick={handleSubmit} mt="24px">Avançar</Button>     
+       <Button isloading={mutation.isloading}
+       onClick={handleSubmit} mt="24px">Avançar</Button>     
         
       </Flex>    
          

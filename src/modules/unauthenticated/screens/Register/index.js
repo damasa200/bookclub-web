@@ -1,13 +1,40 @@
-import { Flex,Image,} from "@chakra-ui/react"
-import{Text,Link,Button } from '../../../../components/atoms'
+import {Flex,Image, useToast,} from "@chakra-ui/react"
+import {Text,Link,Button } from '../../../../components/atoms'
 import { Input} from '../../../../components/molecules'
-import { useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import {useFormik} from 'formik';
 import * as yup from 'yup';
+import { useMutation } from "@tanstack/react-query";
+import { registerCall } from 'services/requests';
+
 
 
 export const RegisterScreen = () => {
    const navigate = useNavigate ()
+   const toast = useToast()
+     const mutation = useMutation({
+    mutationFn: registerCall,
+    onError: (error) => {
+        toast({
+          title: 'Falha ao criar a conta.',
+          description: error?.response?.data?.erro || 'Por favor, tente novamente.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+    })
+   
+   },
+    onSuccess: () => {
+    toast({
+          title: 'Conta Criada com sucesso.',          
+          status: 'sucess',
+          duration: 5000,
+          isClosable: true,
+    })
+    navigate('/')
+  }
+});
+
 
    const { handleSubmit, values, handleChange, errors} = useFormik({
        initialValues: {
@@ -39,7 +66,7 @@ export const RegisterScreen = () => {
        }),
    
        onSubmit:(data) => {
-         console.log({ data })
+         mutation.mutate(data)
        }
      })
 
@@ -99,7 +126,7 @@ export const RegisterScreen = () => {
 
 
 
-        <Button onClick={handleSubmit} mb="12px" mt="24px" >Cadastrar</Button>
+        <Button isLoading={mutation.isLoading} onClick={handleSubmit} mb="12px" mt="24px" >Cadastrar</Button>
         <Link.Action onClick={() => navigate('/')} mt="8px" text= 
         "Já possui uma conta?" actionText= "Faça Login"/>
       </Flex>    
